@@ -32,7 +32,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="map">
+      <Stack.Navigator initialRouteName="frontpage">
       <Stack.Screen 
           name="map" 
           component={map} 

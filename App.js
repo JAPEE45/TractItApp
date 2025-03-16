@@ -12,8 +12,7 @@ import search from './Screens/searchPage'
 SplashScreen.preventAutoHideAsync();
 
 const Stack = createStackNavigator();
-const e = "jaee loves me"
-
+const a = "umay";
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
     'poppins': require('./assets/fonts/Poppins-SemiBold.ttf'),

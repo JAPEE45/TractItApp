@@ -10,7 +10,7 @@ import map from './Screens/MapScreen';
 import search from './Screens/searchPage'
 
 SplashScreen.preventAutoHideAsync();
-const h = "BabyKoh"
+const h = "wara ka baby"
 const Stack = createStackNavigator();
 const a = "lols";
 export default function App() {

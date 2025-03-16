@@ -12,7 +12,7 @@ import search from './Screens/searchPage'
 SplashScreen.preventAutoHideAsync();
 
 const Stack = createStackNavigator();
-const e = "Hannah loves me"
+const e = "jaee loves me"
 
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({

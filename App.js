@@ -7,12 +7,15 @@ import frontpage from './Screens/frontpage';
 import register from './Screens/register';
 import login from './Screens/login';
 import map from './Screens/MapScreen';
-import search from './Screens/searchPage'
+import search from './Screens/searchPage';
+import HomeScreen from './Screens/newfrontpage';
+import { getData, storeData } from './utilities/functions';
+
 
 SplashScreen.preventAutoHideAsync();
-
+const h = "wara ka baby"
 const Stack = createStackNavigator();
-
+const a = "lols";
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
     'poppins': require('./assets/fonts/Poppins-SemiBold.ttf'),
@@ -21,6 +24,8 @@ export default function App() {
   });
 
   useEffect(() => {
+    console.log("hiyyyyyyyyyy")
+    
     if (fontsLoaded || fontError) {
       SplashScreen.hideAsync();
     }
@@ -32,8 +37,13 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="">
-      <Stack.Screen 
+      <Stack.Navigator initialRouteName="map">
+        <Stack.Screen 
+          name="homescreen" 
+          component={HomeScreen} 
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
           name="map" 
           component={map} 
           options={{ headerShown: false }}
@@ -51,6 +61,11 @@ export default function App() {
         <Stack.Screen 
           name="login" 
           component={login} 
+          options={{ headerShown: true, title: ' '  }}
+        />
+        <Stack.Screen 
+          name="searchpage" 
+          component={search} 
           options={{ headerShown: true, title: ' '  }}
         />
       </Stack.Navigator>

@@ -10,9 +10,9 @@ import map from './Screens/MapScreen';
 import search from './Screens/searchPage'
 
 SplashScreen.preventAutoHideAsync();
-
+const h = "wara ka baby"
 const Stack = createStackNavigator();
-
+const a = "umay";
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
     'poppins': require('./assets/fonts/Poppins-SemiBold.ttf'),

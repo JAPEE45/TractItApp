@@ -3,7 +3,7 @@ import React, { useState, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-export default function HomeScreen() {
+export default function AdminPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const slideAnim = useRef(new Animated.Value(-250)).current;
 

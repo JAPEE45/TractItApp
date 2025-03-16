@@ -6,17 +6,17 @@ const login = () => {
     <SafeAreaView style={styles.container}>
       <Text style={styles.text}>Welcome back!</Text>
       <View style={{marginTop: 50}}>
-      <TextInput
-        style={styles.username}
-        placeholder="Enter your Email"
-        placeholderTextColor="white"
-      />
-      <TextInput
-        style={styles.username}
-        placeholder="Enter your Password"
-        placeholderTextColor="white"
-      />
-      <Text style={{fontSize: 15, fontFamily: 'poppinreg', color: 'white', marginTop: 10, marginLeft: 237}}>Forgot Password?</Text>
+        <TextInput
+          style={styles.username}
+          placeholder="Enter your Email"
+          placeholderTextColor="white"
+        />
+        <TextInput
+          style={styles.username}
+          placeholder="Enter your Password"
+          placeholderTextColor="white"
+        />
+        <Text style={{fontSize: 15, fontFamily: 'poppinreg', color: 'white', marginTop: 10, marginLeft: 237}}>Forgot Password?</Text>
       </View>
     </SafeAreaView>
   )

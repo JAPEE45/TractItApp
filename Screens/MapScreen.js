@@ -1,15 +1,39 @@
 import React, { useRef } from 'react';
-import { View, ScrollView, Image, Animated, Text, StyleSheet, SafeAreaView, FlatList } from 'react-native';
+import { View, ScrollView, Image, Animated, Text, StyleSheet, SafeAreaView, FlatList, Modal } from 'react-native';
 import { BANNER_H } from './constants';
 import TopNavigation from './TopNavigation';
 import {data} from './pic'
 import ListItem from './list';
 
+
 const MapScreen = () => {
   const scrollA = useRef(new Animated.Value(0)).current;
-
+  const [isVisible, setVisible] = React.useState(true);
   return (
     <View style={styles.container}> 
+    <Modal animationType='fade' style={{width: '100%', height: '100%', backgroundColor: 'white'}} visible={isVisible} onDismiss={() => setVisible(false)} transparent={true}>
+      <ScrollView horizontal style={{borderColor: 'white', borderWidth: 10,flex:1, backgroundColor: 'rgba(0, 0, 0, 0.7)'}}>
+        <Text>:Low</Text>
+        <Text>:Low</Text>
+        <Text>:Low</Text>
+        <Text>:Low</Text>
+        <Text>:Low</Text>
+        <Text>:Low</Text>
+        <Text>:Low</Text>
+        <Text>:Low</Text>
+        <Text>:Low</Text>
+        <Text>:Low</Text>
+        <Text>:Low</Text>
+        <Text>:Low</Text>
+        <Text>:Low</Text>
+        <Text>:Low</Text>
+        <Text>:Low</Text>
+        <Image source={require('../assets/paths/path1.png')}
+          style={{ height: '100%', borderColor: 'white', borderWidth: 10}}
+          resizeMode='contain'
+        />
+      </ScrollView>
+    </Modal>
       <TopNavigation title="Home" scrollA={scrollA} />
       <Animated.ScrollView
         onScroll={Animated.event(

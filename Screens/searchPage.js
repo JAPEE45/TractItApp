@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, FlatList, Image, StyleSheet } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import {data} from './pic'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
+async function adData(key, data){
+  await AsyncStorage.setItem(key, JSON.stringify(data));
+}
 
 const SearchBar = () => {
   const [query, setQuery] = useState("");
   const [filteredData, setFilteredData] = useState(data);
-
+  const [primaryColor, setPrimaryColor] = useState("")
   const handleSearch = (text) => {
     setQuery(text);
     if (text) {
@@ -21,17 +25,25 @@ const SearchBar = () => {
     }
   };
   
+  useEffect(()=>{
+    async function getColor(){
+      const color = await AsyncStorage.getItem('colors')
+      setPrimaryColor(JSON.parse(color).primary)
+    }
+    getColor()
+    console.log(primaryColor)
+    console.log("hiiiiiiiiiii")
+  },[])
 
   return (
-    <LinearGradient colors={['#792828', '#E6E4E4']} style={styles.container}>
+    <View  style={{...styles.container, backgroundColor: primaryColor}}>
       <TextInput
         style={styles.searchBar}
         placeholder="Search..."
         placeholderTextColor="white"
         value={query}
         onChangeText={handleSearch}
-      />
-      
+      />  
       <FlatList
         data={filteredData}
         keyExtractor={(item) => item.id.toString()}
@@ -43,7 +55,7 @@ const SearchBar = () => {
           </View>
         )}
       />
-    </LinearGradient>
+    </View>
   );
 };
 

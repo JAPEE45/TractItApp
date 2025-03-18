@@ -9,7 +9,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 SplashScreen.preventAutoHideAsync();
 
-export default function HomeScreen() {
+export default function HomeScreen({navigation}) {
   const [fontsLoaded] = useFonts({
     "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
     "Poppins-Medium": require("../assets/fonts/Poppins-Medium.ttf"),
@@ -47,7 +47,7 @@ export default function HomeScreen() {
           <Text style={{...styles.hero, color: color.primary}}>Your guide to every room</Text>
         </View>
 
-        <TouchableOpacity style={styles.searchContainer}>
+        <TouchableOpacity style={styles.searchContainer} onPress={()=> navigation.navigate("searchpage")}>
           <Text style={styles.searchText}>Search room # or building name</Text>
           <Icon name="search" size={20} color="#646464"></Icon>
         </TouchableOpacity>

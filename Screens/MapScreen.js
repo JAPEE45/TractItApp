@@ -32,6 +32,7 @@ const MapScreen = () => {
   return (
     <View style={styles.container}> 
       {/* Modal Component */}
+      
       <MapModal isVisible={isVisible} closeModal={closeModal} selectedItem={selectedItem} />
 
       {/* Top Navigation */}

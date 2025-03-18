@@ -37,7 +37,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="map">
+      <Stack.Navigator initialRouteName="homescreen">
         <Stack.Screen 
           name="homescreen" 
           component={HomeScreen} 

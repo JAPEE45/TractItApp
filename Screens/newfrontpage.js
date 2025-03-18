@@ -49,7 +49,7 @@ export default function HomeScreen() {
 
         <TouchableOpacity style={styles.searchContainer}>
           <Text style={styles.searchText}>Search room # or building name</Text>
-          <Icon name="search" size={20} color="black"></Icon>
+          <Icon name="search" size={20} color="#646464"></Icon>
         </TouchableOpacity>
 
         <View style={styles.imageContainer}>
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#dcdcdc",
     padding: 15,
     borderRadius: 10,
     marginHorizontal: 20,
@@ -138,6 +138,7 @@ const styles = StyleSheet.create({
   searchText: {
     fontSize: 15,
     fontFamily: "Poppins-Medium",
+    color: "#646464"
   },
   imageContainer: {
     marginBottom: 20,

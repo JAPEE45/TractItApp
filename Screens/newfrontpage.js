@@ -15,20 +15,29 @@ export default function HomeScreen({navigation}) {
     "Poppins-Medium": require("../assets/fonts/Poppins-Medium.ttf"),
     "Poppins-SemiBold": require("../assets/fonts/Poppins-SemiBold.ttf"),
   });
-
+  
   const [color, setColor] = useState({ primary: "#640D14" });
-
+  
   useEffect(() => {
-    async function getColors() {
-      await AsyncStorage.setItem(
-        "colors",
-        JSON.stringify({ primary: "#640D14" })
-      );
-      const storedColors = await AsyncStorage.getItem("colors");
-      if (storedColors) setColor(JSON.parse(storedColors));
-    }
+    const getColors = async () => {
+      try {
+        const storedColors = await AsyncStorage.getItem("colors");
+        if (storedColors) {
+          setColor(JSON.parse(storedColors));
+        } else {
+          const defaultColor = { primary: "#640D14" };
+          await AsyncStorage.setItem("colors", JSON.stringify(defaultColor));
+          setColor(defaultColor); // Ensure state is set
+        }
+      } catch (error) {
+        console.error("Error fetching colors:", error);
+      }
+    };
+  
     getColors();
   }, []);
+  
+
 
   if (!fontsLoaded) {
     return null; // Prevent rendering until fonts load

@@ -9,6 +9,7 @@ import login from './Screens/login';
 import map from './Screens/MapScreen';
 import search from './Screens/searchPage';
 import HomeScreen from './Screens/newfrontpage';
+import AdminPage from './Screens/adminPage';
 import { getData, storeData } from './utilities/functions';
 
 
@@ -37,7 +38,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="homescreen">
+      <Stack.Navigator initialRouteName="adminpage">
         <Stack.Screen 
           name="homescreen" 
           component={HomeScreen} 
@@ -67,6 +68,11 @@ export default function App() {
           name="searchpage" 
           component={search} 
           options={{ headerShown: true, title: ' '  }}
+        />
+        <Stack.Screen 
+          name="adminpage" 
+          component={AdminPage} 
+          options={{ headerShown: false, title: ' '  }}
         />
       </Stack.Navigator>
     </NavigationContainer>

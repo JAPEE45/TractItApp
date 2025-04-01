@@ -6,14 +6,14 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
 import * as DocumentPicker from "expo-document-picker";
-
+import PathModal from "./modal/pathsModal";
 
 
 export default function AdminPage() {
   const [imageUri, setImageUri] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [images, setImage] = useState([])
-
+  const [pathModal, setPathModal] = useState(false)
   const selectImage = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
@@ -74,6 +74,7 @@ export default function AdminPage() {
   };
   return (
     <SafeAreaView style={{flex:1}}>
+       <PathModal name="hi" isShow={pathModal} />
       <View style={{flex: 1, backgroundColor: color.primary}}>
         <View style={styles.nav}>
           <TouchableOpacity onPress={toggleMenu}>
@@ -129,11 +130,14 @@ export default function AdminPage() {
       </View>
 
       {/* Modal Component */}
+     
       <Modal transparent={true} visible={modalVisible} animationType="fade">
         
         <View style={styles.modalOverlay}>
-          
           <View style={styles.modalContent}>
+          <TouchableOpacity style={{backgroundColor:'red', padding:10}} onPress={()=> {setPathModal(true); setModalVisible(false)}}>
+              <Text>hi</Text>
+          </TouchableOpacity>
             {/* Close Button */}
             <TouchableOpacity onPress={() => setModalVisible(false)} style={{...styles.closeButton, backgroundColor: color.primary}}>
               <Text style={styles.closeButtonText}>X</Text>

@@ -6,7 +6,7 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { LinearGradient } from "expo-linear-gradient";
-
+import PathModal from "./modal/pathsModal";
 SplashScreen.preventAutoHideAsync();
 
 export default function HomeScreen({navigation}) {

@@ -1,4 +1,4 @@
-import { Text, Modal, StyleSheet, View, TouchableOpacity, Image, Animated, TextInput } from "react-native";
+import { Text, Modal, StyleSheet, View, TouchableOpacity, Image, Animated, TextInput, ScrollView } from "react-native";
 import React, { useState, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -146,7 +146,20 @@ export default function AdminPage() {
                   <Icon name="add-a-photo" size={20}/>
                 </TouchableOpacity>
               </View>
-              <Image style={styles.imageModal} source={require("../assets/hutao.jpg")}/>
+              <ScrollView
+                vertical={true}
+                showsVerticalScrollIndicator={false}
+                style={styles.scrollViewImage}
+              >
+                <View style={{marginBottom: 10}}>
+                  <Image style={styles.imageModal} height={200} source={require("../assets/hutao.jpg")}/>
+                  <TouchableOpacity style={styles.trashIcon}><Text>Trash</Text><Icon name="delete" size={20}/></TouchableOpacity>
+                </View>
+                <View style={{marginBottom: 10}}>
+                  <Image style={styles.imageModal} height={200} source={require("../assets/hutao.jpg")}/>
+                  <TouchableOpacity style={styles.trashIcon}><Text>Trash</Text><Icon name="delete" size={20}/></TouchableOpacity>
+                </View>                
+              </ScrollView>
             </View>
           </View>
         </View>
@@ -335,5 +348,19 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 15,
     marginRight: 10,
+  },
+  scrollViewImage: {
+    width: "100%",
+    height: 260,
+  },
+  trashIcon: {
+    padding: 10,
+    backgroundColor: "red",
+    borderRadius: 10,
+    flexDirection: "row",
+    maxWidth: "max-content",
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "flex-end",
   },
 });

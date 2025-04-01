@@ -7,6 +7,7 @@ import { BANNER_H } from './constants';
 import TopNavigation from './TopNavigation';
 import { data as rawData } from './pic';
 import ListItem from './list';
+import host from './../utilities/host'
 
 const screenWidth = Dimensions.get('window').width;
 const imageAspectRatio = 7;
@@ -121,8 +122,8 @@ const MapModal = ({ isVisible, closeModal }) => {
           }}
         >
           <Image
-            source={require('../assets/paths/path2.png')}
-            style={{ height: '100%', width: imageWidth }}
+            source={{uri:'http://192.168.1.37:8000/media/static/map/f31ee543-362d-4097-9dae-c3fbdd6b4f43.jpeg'}}
+            style={{ height: 300, width: 300 }}
             resizeMode="cover"
           />
         </ScrollView>

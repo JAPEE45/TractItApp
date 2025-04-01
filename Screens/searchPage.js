@@ -3,7 +3,8 @@ import { View, Text, TextInput, FlatList, Image, StyleSheet } from "react-native
 import { LinearGradient } from 'expo-linear-gradient';
 import {data} from './pic'
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import host from "../utilities/host";
+import axiosConfig from "../utilities/axiosConfig";
 
 async function adData(key, data){
   await AsyncStorage.setItem(key, JSON.stringify(data));
@@ -11,17 +12,19 @@ async function adData(key, data){
 
 const SearchBar = () => {
   const [query, setQuery] = useState("");
-  const [filteredData, setFilteredData] = useState(data);
+  const [filteredData, setFilteredData] = useState([]);
   const [primaryColor, setPrimaryColor] = useState("")
+  const [rooms, setRooms] = useState([]);
+  
   const handleSearch = (text) => {
     setQuery(text);
     if (text) {
-      const filtered = data.filter((item) =>
+      const filtered = rooms.filter((item) =>
         item.name?.toString().toLowerCase().includes(text.toLowerCase())
       );
       setFilteredData(filtered);
     } else {
-      setFilteredData(data);
+      setFilteredData(rooms);
     }
   };
   
@@ -30,9 +33,19 @@ const SearchBar = () => {
       const color = await AsyncStorage.getItem('colors')
       setPrimaryColor(JSON.parse(color).primary)
     }
+    async function getRooms(){
+      try {
+        const {data} = await axiosConfig.get('/fetchRoom/')
+        setRooms(data.data)
+        console.log(data.data)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getRooms()
     getColor()
     console.log(primaryColor)
-    console.log("hiiiiiiiiiii")
+  
   },[])
 
   return (

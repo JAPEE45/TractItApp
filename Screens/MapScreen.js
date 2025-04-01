@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback, useMemo } from 'react';
+import React, { useRef, useState, useCallback, useMemo, useEffect } from 'react';
 import { 
   View, ScrollView, Image, Animated, Text, StyleSheet, 
   SafeAreaView, FlatList, Modal, TouchableOpacity, Dimensions 
@@ -8,18 +8,42 @@ import TopNavigation from './TopNavigation';
 import { data as rawData } from './pic';
 import ListItem from './list';
 import host from './../utilities/host'
+import axiosConfig from '../utilities/axiosConfig';
+import { endAsyncEvent } from 'react-native/Libraries/Performance/Systrace';
 
 const screenWidth = Dimensions.get('window').width;
 const imageAspectRatio = 7;
 const imageWidth = screenWidth * imageAspectRatio;
 
-const MapScreen = () => {
+const MapScreen = ({route}) => {
   const scrollA = useRef(new Animated.Value(0)).current;
   const [isVisible, setVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-
-  const data = useMemo(() => rawData, []);
-
+  const [data, setData] = useState([]);
+  const [end, setEnd] = useState(null)
+  console.log(route.params)
+    useEffect(()=>{
+      async function getPath(){
+        try {
+         const {data} = await axiosConfig(`/path/?path=${route.params.id.path_id}`)
+          setEnd(data.data[0].path_name)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+      async function getData(){
+        try {
+          const {data} = await axiosConfig.get(`/room/?room=${route.params.id.id}`)
+          // const {data} = await axiosConfig.get(`/path/?start=1&end=${route.params.id.}`)  
+          console.log(data.data)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+      getPath()
+      // getData()
+      console.log(`end: ${end}`)
+    },[])
   const openModal = useCallback((item) => {
     setSelectedItem(item);
     setVisible(true);

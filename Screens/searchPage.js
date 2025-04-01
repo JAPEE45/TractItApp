@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, FlatList, Image, StyleSheet } from "react-native";
+import { View, Text, TextInput, FlatList, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import {data} from './pic'
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -10,12 +10,14 @@ async function adData(key, data){
   await AsyncStorage.setItem(key, JSON.stringify(data));
 }
 
-const SearchBar = () => {
+
+const SearchBar = ({navigation}) => {
   const [query, setQuery] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [primaryColor, setPrimaryColor] = useState("")
   const [rooms, setRooms] = useState([]);
   
+
   const handleSearch = (text) => {
     setQuery(text);
     if (text) {
@@ -61,11 +63,11 @@ const SearchBar = () => {
         data={filteredData}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Image source={ item.img } style={styles.image} />
+          <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('map', {id: item}) }>
+            <Image source={{uri:`${host}/media/${item.thumbnail}`}} style={styles.image} />
             <Text style={styles.text}>{item.name}</Text>
             <Text style={styles.des}>{item.description}</Text>
-          </View>
+          </TouchableOpacity>
         )}
       />
     </View>

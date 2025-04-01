@@ -1,4 +1,5 @@
-import { Text, Modal, StyleSheet, View, TouchableOpacity, Image, Animated, TextInput, ScrollView } from "react-native";
+import { Text, Modal, StyleSheet, View, TouchableOpacity, Image,
+  Animated, TextInput, ScrollView, FlatList } from "react-native";
 import React, { useState, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -6,22 +7,36 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
 import * as DocumentPicker from "expo-document-picker";
 
+
+
 export default function AdminPage() {
   const [imageUri, setImageUri] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [images, setImage] = useState([])
 
   const selectImage = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
         type: "image/*", // Allow only images
       });
-
-      if (result.type === "success") {
-        setImageUri(result.uri);
+      console.log(result);
+      if(result.canceled == false){
+        setImage(s=>[...s, result.assets[0].uri])
+        console.log(images);
         console.log("Selected Image:", result);
+
       }
+
+      
     } catch (error) {
       console.error("Error picking image:", error);
     }
+  };
+
+  const deleteImage = async (index) => {
+    const up = images.filter((_, i) => i != index);
+    console.log(index);
+    setImage(d => [...up]);
   };
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -151,14 +166,25 @@ export default function AdminPage() {
                 showsVerticalScrollIndicator={false}
                 style={styles.scrollViewImage}
               >
-                <View style={{marginBottom: 10}}>
-                  <Image style={styles.imageModal} height={200} source={require("../assets/hutao.jpg")}/>
-                  <TouchableOpacity style={styles.trashIcon}><Text>Trash</Text><Icon name="delete" size={20}/></TouchableOpacity>
-                </View>
-                <View style={{marginBottom: 10}}>
-                  <Image style={styles.imageModal} height={200} source={require("../assets/hutao.jpg")}/>
-                  <TouchableOpacity style={styles.trashIcon}><Text>Trash</Text><Icon name="delete" size={20}/></TouchableOpacity>
-                </View>                
+                <FlatList
+                  data={images}
+                  keyExtractor={(item) => item}
+                  renderItem={({ item,index }) => (
+                    <View style={{flexDirection:"row"}}>
+                    <Image
+                  source={{ uri: item }}
+                  style={styles.imageModal}
+                  
+                  resizeMode="cover"
+                  
+                />
+                <TouchableOpacity style={styles.deleteImage} onPress={() => deleteImage(index)}>
+                  <Icon name="delete" size={20}/>
+                </TouchableOpacity>
+                  </View>
+                  )}
+                >
+                </FlatList>
               </ScrollView>
             </View>
           </View>
@@ -348,19 +374,18 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 15,
     marginRight: 10,
+    marginBottom: 15
   },
   scrollViewImage: {
     width: "100%",
     height: 260,
   },
-  trashIcon: {
-    padding: 10,
-    backgroundColor: "red",
-    borderRadius: 10,
-    flexDirection: "row",
-    maxWidth: "max-content",
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "flex-end",
+  deleteImage: {
+    position: "absolute",
+    bottom: 25,
+    right: 10,
+    backgroundColor: "white",
+    padding: 5,
+    borderRadius: 5,
   },
 });

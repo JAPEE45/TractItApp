@@ -38,13 +38,13 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="searchpage">
-        <Stack.Screen 
-          name="homescreen" 
+      <Stack.Navigator initialRouteName="adminpage">
+        <Stack.Screen
+          name="homescreen"
           component={HomeScreen} 
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
+        <Stack.Screen
           name="map" 
           component={map} 
           options={{ headerShown: false }}

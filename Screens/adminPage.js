@@ -7,6 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
 import * as DocumentPicker from "expo-document-picker";
 import PathModal from "./modal/pathsModal";
+import {data} from './pic'
 
 
 export default function AdminPage() {
@@ -14,6 +15,19 @@ export default function AdminPage() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [images, setImage] = useState([])
   const [pathModal, setPathModal] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedValue, setSelectedValue] = useState(null);
+
+  const filteredItems = (data || []).filter(item => 
+    item?.label?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  
+
+  const handleSelectItem = (value) => {
+    setSelectedValue(value); // Update the selected value
+    setSearchQuery(''); // Clear the search query
+  };
+
   const selectImage = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
@@ -87,7 +101,7 @@ export default function AdminPage() {
             <TouchableOpacity>
               <Icon style={styles.nav_icon} name="person" size={30} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => setModalVisible(true)}>
               <Icon style={styles.nav_icon} name="map" size={30} color="white" />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setModalVisible(true)}>
@@ -129,71 +143,73 @@ export default function AdminPage() {
         </View>
       </View>
 
-      {/* Modal Component */}
-     
       <Modal transparent={true} visible={modalVisible} animationType="fade">
-        
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-          <TouchableOpacity style={{backgroundColor:'red', padding:10}} onPress={()=> {setPathModal(true); setModalVisible(false)}}>
-              <Text>hi</Text>
-          </TouchableOpacity>
-            {/* Close Button */}
-            <TouchableOpacity onPress={() => setModalVisible(false)} style={{...styles.closeButton, backgroundColor: color.primary}}>
-              <Text style={styles.closeButtonText}>X</Text>
-            </TouchableOpacity>
-            <View style={styles.topViewModal}>
-              <View style={styles.sideTopView}>
-                <Text style={styles.textTitles}>Building No:</Text>
-                <TextInput
-                  style={{...styles.searchBar, borderColor: color.primary, borderWidth: 1.5}}
-
-                ></TextInput>
-              </View>
-              <View style={styles.sideTopView}>
-                <Text style={styles.textTitles}>Room No:</Text>
-                <TextInput
-                  style={{...styles.searchBar, borderColor: color.primary, borderWidth: 1.5}}
-                ></TextInput>
-              </View>
-            </View>
-
-            <View style={styles.bottomViewModal}>
-              <View style={styles.topBottomView}>
-                <Text style={styles.textTitles}>Add Image:</Text>
-                <TouchableOpacity onPress={selectImage}>
-                  <Icon name="add-a-photo" size={20}/>
-                </TouchableOpacity>
-              </View>
-              <ScrollView
-                vertical={true}
-                showsVerticalScrollIndicator={false}
-                style={styles.scrollViewImage}
-              >
-                <FlatList
-                  data={images}
-                  keyExtractor={(item) => item}
-                  renderItem={({ item,index }) => (
-                    <View style={{flexDirection:"row"}}>
-                    <Image
-                  source={{ uri: item }}
-                  style={styles.imageModal}
-                  
-                  resizeMode="cover"
-                  
-                />
-                <TouchableOpacity style={styles.deleteImage} onPress={() => deleteImage(index)}>
-                  <Icon name="delete" size={20}/>
-                </TouchableOpacity>
-                  </View>
-                  )}
-                >
-                </FlatList>
-              </ScrollView>
-            </View>
-          </View>
+  <View style={styles.modalOverlay}>
+    <View style={styles.modalContent}>
+      {/* Close Button */}
+      <TouchableOpacity onPress={() => setModalVisible(false)} style={{...styles.closeButton, backgroundColor: color.primary}}>
+        <Text style={styles.closeButtonText}>X</Text>
+      </TouchableOpacity>
+      <View style={styles.topViewModal}>
+        <View style={styles.sideTopView}>
+          <Text style={styles.textTitles}>Building No:</Text>
+          <TextInput style={{...styles.searchBar, borderColor: color.primary, borderWidth: 1.5}}></TextInput>
         </View>
-      </Modal>
+        <View style={styles.sideTopView}>
+          <Text style={styles.textTitles}>Room No:</Text>
+          <TextInput style={{...styles.searchBar, borderColor: color.primary, borderWidth: 1.5}}></TextInput>
+        </View>
+      </View>
+
+      <View style={styles.container}>
+      <Text style={styles.label}>Search and Select a Fruit:</Text>
+
+      <TextInput
+        style={styles.input}
+        placeholder="Search..."
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+      />
+
+      {searchQuery.length > 0 && filteredItems.length > 0 && (
+        <FlatList
+          data={filteredItems}
+          keyExtractor={(item) => item.value}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => handleSelectItem(item.value)} style={styles.dropdownItem}>
+              <Text style={styles.dropdownText}>{item.label}</Text>
+            </TouchableOpacity>
+          )}
+          style={styles.dropdownList}
+        />
+      )}
+      {selectedValue && (
+        <Text style={styles.selectedValue}>
+          Selected: {selectedValue}
+        </Text>
+      )}
+    </View>
+
+      <View style={styles.bottomViewModal}>
+        <FlatList
+          data={images}
+          keyExtractor={(item) => item}
+          renderItem={({ item, index }) => (
+            <View style={{flexDirection: "row"}}>
+              <Image source={{ uri: item }} style={styles.imageModal} resizeMode="cover" />
+              <TouchableOpacity style={styles.deleteImage} onPress={() => deleteImage(index)}>
+                <Icon name="delete" size={20}/>
+              </TouchableOpacity>
+            </View>
+          )}
+          contentContainerStyle={styles.flatListContainer}
+        />
+      </View>
+    </View>
+  </View>
+</Modal>
+     
+      
     </SafeAreaView>
   );
 }
@@ -391,5 +407,38 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 5,
     borderRadius: 5,
+  }, 
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+  },
+  label: {
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingLeft: 10,
+  },
+  dropdownList: {
+    maxHeight: 200,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  dropdownItem: {
+    padding: 10,
+  },
+  dropdownText: {
+    fontSize: 16,
+  },
+  selectedValue: {
+    marginTop: 20,
+    fontSize: 16,
   },
 });

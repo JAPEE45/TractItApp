@@ -11,17 +11,11 @@ import {data} from './pic'
 
 
 export default function AdminPage() {
-  const [imageUri, setImageUri] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [images, setImage] = useState([])
+  const [images, setImage] = useState([]) 
   const [pathModal, setPathModal] = useState(false)
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedValue, setSelectedValue] = useState(null);
 
-  const filteredItems = (data || []).filter(item => 
-    item?.label?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-  
 
   const handleSelectItem = (value) => {
     setSelectedValue(value); // Update the selected value
@@ -80,7 +74,7 @@ export default function AdminPage() {
 
   const toggleMenu = () => {
     Animated.timing(slideAnim, {
-      toValue: menuOpen ? -250 : 0, // Slide in or out
+      toValue: menuOpen ? -250 : 0,
       duration: 200,
       useNativeDriver: true,
     }).start();
@@ -159,36 +153,11 @@ export default function AdminPage() {
           <Text style={styles.textTitles}>Room No:</Text>
           <TextInput style={{...styles.searchBar, borderColor: color.primary, borderWidth: 1.5}}></TextInput>
         </View>
+
+        <TouchableOpacity style={{...styles.addPath, backgroundColor: color.primary}}>
+        <Text style={styles.addPathText}>add Path</Text>
+      </TouchableOpacity>
       </View>
-
-      <View style={styles.container}>
-      <Text style={styles.label}>Search and Select a Fruit:</Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Search..."
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-      />
-
-      {searchQuery.length > 0 && filteredItems.length > 0 && (
-        <FlatList
-          data={filteredItems}
-          keyExtractor={(item) => item.value}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handleSelectItem(item.value)} style={styles.dropdownItem}>
-              <Text style={styles.dropdownText}>{item.label}</Text>
-            </TouchableOpacity>
-          )}
-          style={styles.dropdownList}
-        />
-      )}
-      {selectedValue && (
-        <Text style={styles.selectedValue}>
-          Selected: {selectedValue}
-        </Text>
-      )}
-    </View>
 
       <View style={styles.bottomViewModal}>
         <FlatList
@@ -407,38 +376,18 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 5,
     borderRadius: 5,
-  }, 
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
   },
-  label: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingLeft: 10,
-  },
-  dropdownList: {
-    maxHeight: 200,
-    borderWidth: 1,
-    borderColor: 'gray',
+  addPath: {
+    position: "absolute",
+    bottom: -50,
+    width: 260,
+    alignItems: "center",
+    backgroundColor: "white",
+    padding: 5,
     borderRadius: 5,
-    marginTop: 10,
   },
-  dropdownItem: {
-    padding: 10,
-  },
-  dropdownText: {
-    fontSize: 16,
-  },
-  selectedValue: {
-    marginTop: 20,
-    fontSize: 16,
+  addPathText:{
+    fontFamily: "poppins",
+    color: "white",
   },
 });

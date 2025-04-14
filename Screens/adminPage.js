@@ -190,8 +190,6 @@ export default function AdminPage() {
         <Text style={styles.closeButtonText}>X</Text>
       </TouchableOpacity>
 
-      <Text style={styles.modalText}>This is the second modal for path details!</Text>
-
     </View>
   </View>
 </Modal>
@@ -410,14 +408,14 @@ const styles = StyleSheet.create({
     color: "white",
   },
   secondModalContent: {
-    height: 400,
+    height: 600,
     width: 300,
     backgroundColor: "white",
     padding: 20,
     paddingTop: 50,
     borderRadius: 10,
     position: "absolute",
-    top: 150,
+    top: 70,
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",

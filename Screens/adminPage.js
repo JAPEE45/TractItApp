@@ -15,6 +15,8 @@ export default function AdminPage() {
   const [pathModal, setPathModal] = useState(false)
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedValue, setSelectedValue] = useState(null);
+  const [secondModalVisible, setSecondModalVisible] = useState(false);
+
 
 
   const handleSelectItem = (value) => {
@@ -154,7 +156,7 @@ export default function AdminPage() {
           <TextInput style={{...styles.searchBar, borderColor: color.primary, borderWidth: 1.5}}></TextInput>
         </View>
 
-        <TouchableOpacity style={{...styles.addPath, backgroundColor: color.primary}}>
+        <TouchableOpacity style={{...styles.addPath, backgroundColor: color.primary}} onPress={() => setSecondModalVisible(true)}>
         <Text style={styles.addPathText}>add Path</Text>
       </TouchableOpacity>
       </View>
@@ -177,6 +179,23 @@ export default function AdminPage() {
     </View>
   </View>
 </Modal>
+
+<Modal transparent={true} visible={secondModalVisible} animationType="slide">
+  <View style={styles.modalOverlay}>
+    <View style={styles.secondModalContent}>
+      <TouchableOpacity
+        onPress={() => setSecondModalVisible(false)}
+        style={{...styles.closeButton, backgroundColor: color.primary}}
+      >
+        <Text style={styles.closeButtonText}>X</Text>
+      </TouchableOpacity>
+
+      <Text style={styles.modalText}>This is the second modal for path details!</Text>
+
+    </View>
+  </View>
+</Modal>
+
      
       
     </SafeAreaView>
@@ -390,4 +409,19 @@ const styles = StyleSheet.create({
     fontFamily: "poppins",
     color: "white",
   },
+  secondModalContent: {
+    height: 400,
+    width: 300,
+    backgroundColor: "white",
+    padding: 20,
+    paddingTop: 50,
+    borderRadius: 10,
+    position: "absolute",
+    top: 150,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 20,
+  }
+  
 });

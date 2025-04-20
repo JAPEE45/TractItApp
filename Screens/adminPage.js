@@ -8,6 +8,9 @@ import { useEffect } from "react";
 import * as DocumentPicker from "expo-document-picker";
 import PathModal from "./modal/pathsModal";
 import {data} from './pic'
+import host from "../utilities/host";
+import axiosConfig from "../utilities/axiosConfig";
+
 
 
 export default function AdminPage() {
@@ -16,7 +19,46 @@ export default function AdminPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedValue, setSelectedValue] = useState(null);
   const [secondModalVisible, setSecondModalVisible] = useState(false);
+   const [query, setQuery] = useState("");
+    const [filteredData, setFilteredData] = useState([]);
+    const [primaryColor, setPrimaryColor] = useState("")
+    const [rooms, setRooms] = useState([]);
 
+  async function adData(key, data){
+    await AsyncStorage.setItem(key, JSON.stringify(data));
+  }
+
+  const handleSearch = (text) => {
+      setQuery(text);
+      if (text) {
+        const filtered = rooms.filter((item) =>
+          item.name?.toString().toLowerCase().includes(text.toLowerCase())
+        );
+        setFilteredData(filtered);
+      } else {
+        setFilteredData(rooms);
+      }
+    };
+    
+    useEffect(()=>{
+      async function getColor(){
+        const color = await AsyncStorage.getItem('colors')
+        setPrimaryColor(JSON.parse(color).primary)
+      }
+      async function getRooms(){
+        try {
+          const {data} = await axiosConfig.get('/fetchRoom/')
+          setRooms(data.data)
+          console.log(data.data)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+      getRooms()
+      getColor()
+      console.log(primaryColor)
+    
+    },[])
 
 
   const handleSelectItem = (value) => {
@@ -188,7 +230,29 @@ export default function AdminPage() {
         style={{...styles.closeButton, backgroundColor: color.primary}}
       >
         <Text style={styles.closeButtonText}>X</Text>
+
+        
       </TouchableOpacity>
+      <View  style={{...styles.container, backgroundColor: "white"}}>
+              <TextInput
+                style={styles.searchBar}
+                placeholder="Search..."
+                placeholderTextColor = '#792828'
+                value={query}
+                onChangeText={handleSearch}
+              />  
+              <FlatList
+                data={filteredData}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                  <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('map', {id: item}) }>
+                    <Image source={{uri:`${host}/media/${item.thumbnail}`}} style={styles.image} />
+                    <Text style={styles.text}>{item.name}</Text>
+                    <Text style={styles.des}>{item.description}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
 
     </View>
   </View>
@@ -420,6 +484,47 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 20,
-  }
+  },
+
+  container: {
+    padding: 20,
+    paddingTop: 30,
+    width: "110%",
+    flex: 1,
   
+  },
+  searchBar: {
+    borderWidth: 1,
+    borderColor: '#792828',
+    borderRadius: 8,
+    padding: 10,
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  item: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  image: {
+    width: 70,
+    height: 70,
+    borderRadius: 8,
+    marginRight: 10,
+  },
+  text: {
+    fontSize: 18,
+    fontFamily: "poppins",
+    transform: [{ translateY: -15 }],
+    color: "white",
+  },
+  des: {
+    fontSize: 12,
+    transform: [{ translateX: 93}, { translateY: 5}],
+    position: "absolute",
+    color: "white",
+  },
+
 });

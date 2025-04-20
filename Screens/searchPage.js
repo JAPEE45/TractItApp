@@ -11,7 +11,7 @@ async function adData(key, data){
 }
 
 
-const SearchBar = ({navigation}) => {
+const SearchBar = ({navigation}) => { 
   const [query, setQuery] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [primaryColor, setPrimaryColor] = useState("")
@@ -33,7 +33,7 @@ const SearchBar = ({navigation}) => {
   useEffect(()=>{
     async function getColor(){
       const color = await AsyncStorage.getItem('colors')
-      setPrimaryColor(JSON.parse(color).primary)
+      setPrimaryColor(JSON.parse(color).primary) 
     }
     async function getRooms(){
       try {

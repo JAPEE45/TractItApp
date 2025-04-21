@@ -8,8 +8,6 @@ import { useEffect } from "react";
 import * as DocumentPicker from "expo-document-picker";
 import PathModal from "./modal/pathsModal";
 import {data} from './pic'
-import host from "../utilities/host";
-import axiosConfig from "../utilities/axiosConfig";
 
 
 
@@ -19,46 +17,20 @@ export default function AdminPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedValue, setSelectedValue] = useState(null);
   const [secondModalVisible, setSecondModalVisible] = useState(false);
-   const [query, setQuery] = useState("");
-    const [filteredData, setFilteredData] = useState([]);
-    const [primaryColor, setPrimaryColor] = useState("")
-    const [rooms, setRooms] = useState([]);
-
-  async function adData(key, data){
-    await AsyncStorage.setItem(key, JSON.stringify(data));
-  }
+  const [query, setQuery] = useState("");
+  const [filteredData, setFilteredData] = useState(data);
 
   const handleSearch = (text) => {
-      setQuery(text);
-      if (text) {
-        const filtered = rooms.filter((item) =>
-          item.name?.toString().toLowerCase().includes(text.toLowerCase())
-        );
-        setFilteredData(filtered);
-      } else {
-        setFilteredData(rooms);
-      }
-    };
-    
-    useEffect(()=>{
-      async function getColor(){
-        const color = await AsyncStorage.getItem('colors')
-        setPrimaryColor(JSON.parse(color).primary)
-      }
-      async function getRooms(){
-        try {
-          const {data} = await axiosConfig.get('/fetchRoom/')
-          setRooms(data.data)
-          console.log(data.data)
-        } catch (error) {
-          console.log(error)
-        }
-      }
-      getRooms()
-      getColor()
-      console.log(primaryColor)
-    
-    },[])
+    setQuery(text);
+    if (text) {
+      const filtered = data.filter((item) =>
+        item.name?.toString().toLowerCase().includes(text.toLowerCase())
+      );
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(data);
+    }
+  };
 
 
   const handleSelectItem = (value) => {
@@ -158,7 +130,7 @@ export default function AdminPage() {
               resizeMode="contain"
             />
             <View style={styles.sides}>
-              <Text style={styles.adminName}>Japee</Text>
+              <Text style={styles.adminName}>uwuInz</Text>
               <TouchableOpacity style={styles.editProfileAdmin}>
                 <Text style={styles.editAdminText}>Edit Profile</Text>
               </TouchableOpacity>
@@ -234,25 +206,30 @@ export default function AdminPage() {
         
       </TouchableOpacity>
       <View  style={{...styles.container, backgroundColor: "white"}}>
-              <TextInput
-                style={styles.searchBar}
-                placeholder="Search..."
-                placeholderTextColor = '#792828'
-                value={query}
-                onChangeText={handleSearch}
-              />  
-              <FlatList
-                data={filteredData}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => (
-                  <TouchableOpacity style={styles.item} onPress={() => navigation.navigate('map', {id: item}) }>
-                    <Image source={{uri:`${host}/media/${item.thumbnail}`}} style={styles.image} />
-                    <Text style={styles.text}>{item.name}</Text>
-                    <Text style={styles.des}>{item.description}</Text>
-                  </TouchableOpacity>
-                )}
-              />
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search..."
+        placeholderTextColor= '#792828'
+        value={query}
+        onChangeText={handleSearch}
+      />
+      
+      <FlatList
+        data={filteredData}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.item}>
+            <Image source={ item.img } style={styles.image} />
+            <View style={styles.textContainer}>
+            <Text style={styles.text}>{item.name}</Text>
+            <Text style={styles.des}>{item.description}</Text>
             </View>
+            <Text style={styles.addButtonText}>add</Text>
+          </View>
+        )}
+      />
+      
+      </View>
 
     </View>
   </View>
@@ -504,27 +481,33 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#ddd",
   },
   image: {
-    width: 70,
-    height: 70,
+    width: 40,
+    height: 40,
     borderRadius: 8,
     marginRight: 10,
   },
+  textContainer: {
+    flex: 1, 
+
+  },
   text: {
-    fontSize: 18,
+    fontSize: 10,
     fontFamily: "poppins",
-    transform: [{ translateY: -15 }],
-    color: "white",
+    color: '#792828',
   },
   des: {
-    fontSize: 12,
-    transform: [{ translateX: 93}, { translateY: 5}],
-    position: "absolute",
-    color: "white",
+    fontSize: 8,
+    color: '#792828',
+  },
+  addButtonText: {
+    color: '#792828',
+    fontFamily: "poppins", 
   },
 
 });

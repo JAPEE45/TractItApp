@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import * as DocumentPicker from "expo-document-picker";
 import PathModal from "./modal/pathsModal";
 import {data} from './pic'
+import {Sdata} from './Sdata'
 
 
 
@@ -19,6 +20,7 @@ export default function AdminPage() {
   const [secondModalVisible, setSecondModalVisible] = useState(false);
   const [query, setQuery] = useState("");
   const [filteredData, setFilteredData] = useState(data);
+  const [SfilterData, setSFilterData] = useState(Sdata);
 
   const handleSearch = (text) => {
     setQuery(text);
@@ -29,6 +31,7 @@ export default function AdminPage() {
       setFilteredData(filtered);
     } else {
       setFilteredData(data);
+      setSFilterData(Sdata)
     }
   };
 
@@ -176,20 +179,32 @@ export default function AdminPage() {
       </View>
 
       <View style={styles.bottomViewModal}>
-        <FlatList
-          data={images}
-          keyExtractor={(item) => item}
-          renderItem={({ item, index }) => (
-            <View style={{flexDirection: "row"}}>
-              <Image source={{ uri: item }} style={styles.imageModal} resizeMode="cover" />
-              <TouchableOpacity style={styles.deleteImage} onPress={() => deleteImage(index)}>
-                <Icon name="delete" size={20}/>
-              </TouchableOpacity>
-            </View>
-          )}
-          contentContainerStyle={styles.flatListContainer}
-        />
-      </View>
+  <View style={styles.flatListContainer}>
+    <FlatList
+      data={SfilterData}
+      keyExtractor={(item) => item.id.toString()}
+      renderItem={({ item }) => (
+        <View style={styles.item}>
+          <Image source={item.img} style={styles.image} />
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>{item.name}</Text>
+            <Text style={styles.des}>{item.description}</Text>
+          </View>
+          <Text style={styles.addButtonText1}>Remove</Text>
+        </View>
+      )}
+      contentContainerStyle={styles.flatListContent}
+      showsVerticalScrollIndicator={false}
+    />
+  </View>
+
+  <View style={styles.addPathWrapper}>
+    <TouchableOpacity style={[styles.addPathButton, { backgroundColor: color.primary }]} onPress={() => setSecondModalVisible(true)}>
+      <Text style={styles.addPathText}>add Path</Text>
+    </TouchableOpacity>
+  </View>
+</View>
+
     </View>
   </View>
 </Modal>
@@ -409,8 +424,35 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   bottomViewModal: {
-    gap: 10,
+    flex: 1,
+    justifyContent: "space-between",
+    position: "relative",
   },
+  
+  flatListContainer: {
+    maxHeight: 250, // adjust based on how much you want visible before scrolling
+  },
+  
+  flatListContent: {
+    paddingBottom: 80,
+  },
+  
+  addPathWrapper: {
+    position: "absolute",
+    bottom: -2,
+    left: 0,
+    right: 0,
+    width: "100%",
+    alignItems: "center",
+  },
+  
+  addPathButton: {
+    padding: 5,
+    width: 260,
+    alignItems: "center",
+    borderRadius: 5,
+  },
+  
   topBottomView: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -508,6 +550,11 @@ const styles = StyleSheet.create({
   addButtonText: {
     color: '#792828',
     fontFamily: "poppins", 
+  },
+  addButtonText1: {
+    color: '#792828',
+    fontFamily: "poppins",
+    fontSize: 10,
   },
 
 });

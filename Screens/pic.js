@@ -4,4 +4,5 @@ export const data = [
     { id: 2, name: 'Path 2', description: 'Front of caba bulding', img: require('../assets/bg2.png') },
     { id: 3, img: require('../assets/hutao.jpg') },
     { id: 4, img: require('../assets/osmain.jpg') },
+    { id: 4, img: require('../assets/osmain.jpg') },
 ];

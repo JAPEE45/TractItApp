@@ -7,13 +7,40 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
 import * as DocumentPicker from "expo-document-picker";
 import PathModal from "./modal/pathsModal";
+import {data} from './pic'
+import {Sdata} from './Sdata'
+
 
 
 export default function AdminPage() {
-  const [imageUri, setImageUri] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [images, setImage] = useState([])
+  const [images, setImage] = useState([]) 
   const [pathModal, setPathModal] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedValue, setSelectedValue] = useState(null);
+  const [secondModalVisible, setSecondModalVisible] = useState(false);
+  const [query, setQuery] = useState("");
+  const [filteredData, setFilteredData] = useState(data);
+  const [SfilterData, setSFilterData] = useState(Sdata);
+
+  const handleSearch = (text) => {
+    setQuery(text);
+    if (text) {
+      const filtered = data.filter((item) =>
+        item.name?.toString().toLowerCase().includes(text.toLowerCase())
+      );
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(data);
+      setSFilterData(Sdata)
+    }
+  };
+
+
+  const handleSelectItem = (value) => {
+    setSelectedValue(value); // Update the selected value
+    setSearchQuery(''); // Clear the search query
+  };
+
   const selectImage = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
@@ -66,7 +93,7 @@ export default function AdminPage() {
 
   const toggleMenu = () => {
     Animated.timing(slideAnim, {
-      toValue: menuOpen ? -250 : 0, // Slide in or out
+      toValue: menuOpen ? -250 : 0,
       duration: 200,
       useNativeDriver: true,
     }).start();
@@ -87,7 +114,7 @@ export default function AdminPage() {
             <TouchableOpacity>
               <Icon style={styles.nav_icon} name="person" size={30} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => setModalVisible(true)}>
               <Icon style={styles.nav_icon} name="map" size={30} color="white" />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setModalVisible(true)}>
@@ -106,7 +133,7 @@ export default function AdminPage() {
               resizeMode="contain"
             />
             <View style={styles.sides}>
-              <Text style={styles.adminName}>Japee</Text>
+              <Text style={styles.adminName}>uwuInz</Text>
               <TouchableOpacity style={styles.editProfileAdmin}>
                 <Text style={styles.editAdminText}>Edit Profile</Text>
               </TouchableOpacity>
@@ -129,71 +156,102 @@ export default function AdminPage() {
         </View>
       </View>
 
-      {/* Modal Component */}
-     
       <Modal transparent={true} visible={modalVisible} animationType="fade">
-        
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-          <TouchableOpacity style={{backgroundColor:'red', padding:10}} onPress={()=> {setPathModal(true); setModalVisible(false)}}>
-              <Text>hi</Text>
-          </TouchableOpacity>
-            {/* Close Button */}
-            <TouchableOpacity onPress={() => setModalVisible(false)} style={{...styles.closeButton, backgroundColor: color.primary}}>
-              <Text style={styles.closeButtonText}>X</Text>
-            </TouchableOpacity>
-            <View style={styles.topViewModal}>
-              <View style={styles.sideTopView}>
-                <Text style={styles.textTitles}>Building No:</Text>
-                <TextInput
-                  style={{...styles.searchBar, borderColor: color.primary, borderWidth: 1.5}}
-
-                ></TextInput>
-              </View>
-              <View style={styles.sideTopView}>
-                <Text style={styles.textTitles}>Room No:</Text>
-                <TextInput
-                  style={{...styles.searchBar, borderColor: color.primary, borderWidth: 1.5}}
-                ></TextInput>
-              </View>
-            </View>
-
-            <View style={styles.bottomViewModal}>
-              <View style={styles.topBottomView}>
-                <Text style={styles.textTitles}>Add Image:</Text>
-                <TouchableOpacity onPress={selectImage}>
-                  <Icon name="add-a-photo" size={20}/>
-                </TouchableOpacity>
-              </View>
-              <ScrollView
-                vertical={true}
-                showsVerticalScrollIndicator={false}
-                style={styles.scrollViewImage}
-              >
-                <FlatList
-                  data={images}
-                  keyExtractor={(item) => item}
-                  renderItem={({ item,index }) => (
-                    <View style={{flexDirection:"row"}}>
-                    <Image
-                  source={{ uri: item }}
-                  style={styles.imageModal}
-                  
-                  resizeMode="cover"
-                  
-                />
-                <TouchableOpacity style={styles.deleteImage} onPress={() => deleteImage(index)}>
-                  <Icon name="delete" size={20}/>
-                </TouchableOpacity>
-                  </View>
-                  )}
-                >
-                </FlatList>
-              </ScrollView>
-            </View>
-          </View>
+  <View style={styles.modalOverlay}>
+    <View style={styles.modalContent}>
+      {/* Close Button */}
+      <TouchableOpacity onPress={() => setModalVisible(false)} style={{...styles.closeButton, backgroundColor: color.primary}}>
+        <Text style={styles.closeButtonText}>X</Text>
+      </TouchableOpacity>
+      <View style={styles.topViewModal}>
+        <View style={styles.sideTopView}>
+          <Text style={styles.textTitles}>Building No:</Text>
+          <TextInput style={{...styles.searchBar, borderColor: color.primary, borderWidth: 1.5}}></TextInput>
         </View>
-      </Modal>
+        <View style={styles.sideTopView}>
+          <Text style={styles.textTitles}>Room No:</Text>
+          <TextInput style={{...styles.searchBar, borderColor: color.primary, borderWidth: 1.5}}></TextInput>
+        </View>
+
+        <TouchableOpacity style={{...styles.addPath, backgroundColor: color.primary}} onPress={() => setSecondModalVisible(true)}>
+        <Text style={styles.addPathText}>add Path</Text>
+      </TouchableOpacity>
+      </View>
+
+      <View style={styles.bottomViewModal}>
+  <View style={styles.flatListContainer}>
+    <FlatList
+      data={SfilterData}
+      keyExtractor={(item) => item.id.toString()}
+      renderItem={({ item }) => (
+        <View style={styles.item}>
+          <Image source={item.img} style={styles.image} />
+          <View style={styles.textContainer}>
+            <Text style={styles.text}>{item.name}</Text>
+            <Text style={styles.des}>{item.description}</Text>
+          </View>
+          <Text style={styles.addButtonText1}>Remove</Text>
+        </View>
+      )}
+      contentContainerStyle={styles.flatListContent}
+      showsVerticalScrollIndicator={false}
+    />
+  </View>
+
+  <View style={styles.addPathWrapper}>
+    <TouchableOpacity style={[styles.addPathButton, { backgroundColor: color.primary }]} onPress={() => setSecondModalVisible(true)}>
+      <Text style={styles.addPathText}>add Path</Text>
+    </TouchableOpacity>
+  </View>
+</View>
+
+    </View>
+  </View>
+</Modal>
+
+<Modal transparent={true} visible={secondModalVisible} animationType="slide">
+  <View style={styles.modalOverlay}>
+    <View style={styles.secondModalContent}>
+      <TouchableOpacity
+        onPress={() => setSecondModalVisible(false)}
+        style={{...styles.closeButton, backgroundColor: color.primary}}
+      >
+        <Text style={styles.closeButtonText}>X</Text>
+
+        
+      </TouchableOpacity>
+      <View  style={{...styles.container, backgroundColor: "white"}}>
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search..."
+        placeholderTextColor= '#792828'
+        value={query}
+        onChangeText={handleSearch}
+      />
+      
+      <FlatList
+        data={filteredData}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.item}>
+            <Image source={ item.img } style={styles.image} />
+            <View style={styles.textContainer}>
+            <Text style={styles.text}>{item.name}</Text>
+            <Text style={styles.des}>{item.description}</Text>
+            </View>
+            <Text style={styles.addButtonText}>add</Text>
+          </View>
+        )}
+      />
+      
+      </View>
+
+    </View>
+  </View>
+</Modal>
+
+     
+      
     </SafeAreaView>
   );
 }
@@ -366,8 +424,35 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   bottomViewModal: {
-    gap: 10,
+    flex: 1,
+    justifyContent: "space-between",
+    position: "relative",
   },
+  
+  flatListContainer: {
+    maxHeight: 250, // adjust based on how much you want visible before scrolling
+  },
+  
+  flatListContent: {
+    paddingBottom: 80,
+  },
+  
+  addPathWrapper: {
+    position: "absolute",
+    bottom: -2,
+    left: 0,
+    right: 0,
+    width: "100%",
+    alignItems: "center",
+  },
+  
+  addPathButton: {
+    padding: 5,
+    width: 260,
+    alignItems: "center",
+    borderRadius: 5,
+  },
+  
   topBottomView: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -392,4 +477,84 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 5,
   },
+  addPath: {
+    position: "absolute",
+    bottom: -50,
+    width: 260,
+    alignItems: "center",
+    backgroundColor: "white",
+    padding: 5,
+    borderRadius: 5,
+  },
+  addPathText:{
+    fontFamily: "poppins",
+    color: "white",
+  },
+  secondModalContent: {
+    height: 600,
+    width: 300,
+    backgroundColor: "white",
+    padding: 20,
+    paddingTop: 50,
+    borderRadius: 10,
+    position: "absolute",
+    top: 70,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 20,
+  },
+
+  container: {
+    padding: 20,
+    paddingTop: 30,
+    width: "110%",
+    flex: 1,
+  
+  },
+  searchBar: {
+    borderWidth: 1,
+    borderColor: '#792828',
+    borderRadius: 8,
+    padding: 10,
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  item: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  image: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    marginRight: 10,
+  },
+  textContainer: {
+    flex: 1, 
+
+  },
+  text: {
+    fontSize: 10,
+    fontFamily: "poppins",
+    color: '#792828',
+  },
+  des: {
+    fontSize: 8,
+    color: '#792828',
+  },
+  addButtonText: {
+    color: '#792828',
+    fontFamily: "poppins", 
+  },
+  addButtonText1: {
+    color: '#792828',
+    fontFamily: "poppins",
+    fontSize: 10,
+  },
+
 });

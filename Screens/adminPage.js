@@ -18,9 +18,31 @@ export default function AdminPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedValue, setSelectedValue] = useState(null);
   const [secondModalVisible, setSecondModalVisible] = useState(false);
+  const [thirdModalVisible, setThirdModalVisible] = useState(false);
+  const [distanceModal, setDistanceModal] = useState(false);
+  const [selectedPath, setSelectedPath] = useState(null);
+const [newDistance, setNewDistance] = useState('');
+
   const [query, setQuery] = useState("");
   const [filteredData, setFilteredData] = useState(data);
   const [SfilterData, setSFilterData] = useState(Sdata);
+
+
+  const handleAddDistance = () => {
+  if (!selectedPath || newDistance.trim() === '') return;
+
+  const newItem = {
+    id: SfilterData.length + 1,
+    name: selectedPath.name,
+    description: `Distance: ${newDistance} meters`,
+    img: selectedPath.img, // reuse the selected path image
+  };
+
+  setSFilterData(prev => [...prev, newItem]);
+  setNewDistance('');
+  setSelectedPath(null);
+  setDistanceModal(false);
+};
 
   const handleSearch = (text) => {
     setQuery(text);
@@ -117,7 +139,7 @@ export default function AdminPage() {
             <TouchableOpacity onPress={() => setModalVisible(true)}>
               <Icon style={styles.nav_icon} name="map" size={30} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <TouchableOpacity onPress={() => setThirdModalVisible(true)}>
               <Icon style={styles.nav_icon} name="place" size={30} color="white" />
             </TouchableOpacity>
           </View>
@@ -209,6 +231,86 @@ export default function AdminPage() {
   </View>
 </Modal>
 
+<Modal transparent={true} visible={distanceModal} animationType="fade">
+  <View style={styles.modalDistance}>
+    <View style={styles.modalContentDi}>
+      <TouchableOpacity
+        onPress={() => {
+          setDistanceModal(false);
+          setSelectedPath(null);
+          setNewDistance('');
+        }}
+        style={{ ...styles.closeButton, backgroundColor: color.primary }}
+      >
+        <Text style={styles.closeButtonText}>X</Text>
+      </TouchableOpacity>
+
+      <View style={styles.topViewModal}>
+        <View style={styles.sideTopView}>
+          <Text style={styles.textTitles}>Distance :</Text>
+          <TextInput
+            keyboardType="numeric"
+            value={newDistance}
+            onChangeText={setNewDistance}
+            style={{ ...styles.searchBar, borderColor: color.primary, borderWidth: 1.5 }}
+          />
+        </View>
+
+        <TouchableOpacity
+          style={{ ...styles.addP, backgroundColor: color.primary }}
+          onPress={handleAddDistance}
+        >
+          <Text style={styles.addPathText}>add</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </View>
+</Modal>
+
+
+<Modal transparent={true} visible={thirdModalVisible} animationType="fade">
+  <View style={styles.modalOverlay}>
+    <View style={styles.modalContent}>
+      {/* Close Button */}
+      <TouchableOpacity onPress={() => setThirdModalVisible(false)} style={{...styles.closeButton, backgroundColor: color.primary}}>
+        <Text style={styles.closeButtonText}>X</Text>
+      </TouchableOpacity>
+      <View style={styles.topViewModal}>
+        <View style={styles.sideTopView}>
+          <Text style={styles.textTitles}>Building No:</Text>
+          <TextInput style={{...styles.searchBar, borderColor: color.primary, borderWidth: 1.5}}></TextInput>
+        </View>
+        <View style={styles.sideTopView}>
+          <Text style={styles.textTitles}>Room No:</Text>
+          <TextInput style={{...styles.searchBar, borderColor: color.primary, borderWidth: 1.5}}></TextInput>
+        </View>
+
+        <TouchableOpacity style={{...styles.addP, backgroundColor: color.primary}} onPress={() => setSecondModalVisible(true)}>
+        <Text style={styles.addPathText}>add</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={{...styles.remove, backgroundColor: color.primary}} onPress={() => setSecondModalVisible(true)}>
+        <Text style={styles.addPathText}>remove</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={{...styles.remove, backgroundColor: color.primary}} onPress={() => setSecondModalVisible(true)}>
+        <Text style={styles.addPathText}>upate</Text>
+      </TouchableOpacity>
+      </View>
+
+      <View style={styles.bottomViewModal}>
+  
+
+  <View style={styles.addPathWrapper}>
+    <TouchableOpacity style={[styles.addPathButton, { backgroundColor: color.primary }]} onPress={() => setSecondModalVisible(true)}>
+      <Text style={styles.addPathText}>add Path</Text>
+    </TouchableOpacity>
+  </View>
+</View>
+
+    </View>
+  </View>
+</Modal>
+
+
 <Modal transparent={true} visible={secondModalVisible} animationType="slide">
   <View style={styles.modalOverlay}>
     <View style={styles.secondModalContent}>
@@ -233,13 +335,24 @@ export default function AdminPage() {
         data={filteredData}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.item}>
+          <View key={item.id} style={styles.item}>
             <Image source={ item.img } style={styles.image} />
             <View style={styles.textContainer}>
             <Text style={styles.text}>{item.name}</Text>
             <Text style={styles.des}>{item.description}</Text>
             </View>
-            <Text style={styles.addButtonText}>add</Text>
+            <TouchableOpacity
+  onPress={() => {
+    setSelectedPath(item);
+    setDistanceModal(true);
+    setSecondModalVisible(false); 
+    
+  }}
+  style={{ ...styles.closeButton, backgroundColor: color.primary }}
+>
+  <Text style={styles.closeButtonText}>a</Text>
+</TouchableOpacity>
+
           </View>
         )}
       />
@@ -557,4 +670,28 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
 
+  modalDistance: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+
+  modalContentDi: {
+    height: 200,
+    width: 300,
+    backgroundColor: "white",
+    padding: 20,
+    paddingTop: 50,
+    borderRadius: 10,
+    position: "absolute",
+    top: 100,
+    flexDirection: "column",
+    gap: 60,
+  },
 });

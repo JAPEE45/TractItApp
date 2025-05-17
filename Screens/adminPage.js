@@ -60,7 +60,7 @@ const [newDistance, setNewDistance] = useState('');
 
   const handleSelectItem = (value) => {
     setSelectedValue(value); // Update the selected value
-    setSearchQuery(''); // Clear the search query
+    setSearchQuery('');
   };
 
   const selectImage = async () => {
